@@ -3,6 +3,7 @@ from lxml import etree
 import sys
 import datetime
 
+
 def load(filename, user=None, database=None, password=None, host=None,create=False):
     print('Loading file')
     tree = etree.parse(filename)
@@ -47,29 +48,32 @@ def help():
 if __name__ == "__main__":
 
     x = 2
-    filename = sys.argv[1]
-    create = False
-    while x < len(sys.argv):
-        arg = sys.argv[x]
-        if arg == '-u':
-            user = sys.argv[x+1]
+    if len(sys.argv)<2:
+        help()
+    else:
+        filename = sys.argv[1]
+        create = False
+        while x < len(sys.argv):
+            arg = sys.argv[x]
+            if arg == '-u':
+                user = sys.argv[x+1]
+                x += 1
+            elif arg == '-c':
+                create = True
+            elif arg == '-d':
+                database = sys.argv[x+1]
+                x += 1
+            elif arg == '-w':
+                password = sys.argv[x+1]
+                x += 1
+            elif arg == '-H':
+                host = sys.argv[x+1]
+                x += 1
+            elif arg == '--help':
+                help()
+                exit()
+            else:
+                print('Invalid option')
+                help()
             x += 1
-        elif arg == '-c':
-            create = True
-        elif arg == '-d':
-            database = sys.argv[x+1]
-            x += 1
-        elif arg == '-w':
-            password = sys.argv[x+1]
-            x += 1
-        elif arg == '-H':
-            host = sys.argv[x+1]
-            x += 1
-        elif arg == '--help':
-            help()
-            exit()
-        else:
-            print('Invalid option')
-        x += 1
-
-    load(filename, user, database, password, host, create)
+        load(filename, user, database, password, host, create)
