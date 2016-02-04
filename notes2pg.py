@@ -5,11 +5,23 @@ import sys
 import datetime
 
 
+def create_schema(con):
+    print('Creating schema')
+    f = open('schema.sql', 'r')
+    query = f.read()
+    f.close()
+    cursor = con.cursor()
+    cursor.execute(query)
+    cursor.close()
+
+
 def load(filename, user=None, database=None, password=None, host=None,create=False):
+    con = psycopg2.connect(database=database, user=user, password=password, host=host)
+    if create:
+        create_schema(con)
     print('Loading file')
     tree = etree.parse(filename)
     root = tree.getroot()
-    con = psycopg2.connect(database=database, user=user, password=password, host=host)
     cur = con.cursor()
     projection = str(4326)
     sql_insert_note = """
