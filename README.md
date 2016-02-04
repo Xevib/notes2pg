@@ -1,6 +1,7 @@
 Usage:
+        
     notes2pg planet-notes.osn [options]
-  
+        
   Options:
   
     -u Postgres username
