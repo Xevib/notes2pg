@@ -1,6 +1,6 @@
 Usage:
 
-  otes2pg planet-notes.osn [options]
+  notes2pg planet-notes.osn [options]
   
   Options:
   
