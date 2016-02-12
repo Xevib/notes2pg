@@ -58,8 +58,8 @@ def help():
     print('\t-w Postgres password')
     print('\t-H Postgres host')
 
-if __name__ == "__main__":
 
+def main():
     x = 2
     if len(sys.argv)<2:
         help()
@@ -90,3 +90,7 @@ if __name__ == "__main__":
                 help()
             x += 1
         load(filename, user, database, password, host, create)
+
+
+if __name__ == "__main__":
+    main()
