@@ -25,8 +25,22 @@ def load(filename, user=None, database=None, password=None, host=None,create=Fal
     cur = con.cursor()
     projection = str(4326)
     if create:
-        with open('schema.sql', 'r') as f:
-            sql_create = f.read()
+        sql_create = """
+        CREATE TABLE planet_osm_notes(
+        id integer NOT NULL PRIMARY KEY,
+        geom geometry NOT NULL,
+        created_at timestamp,
+        closed_at timestamp
+        );
+        CREATE TABLE planet_osm_notes_comments(
+        note_id integer REFERENCES planet_osm_notes (id),
+	    action text,
+	    "timestamp" timestamp,
+	    uid integer,
+	    "user" text,
+	    comment text
+        );
+        """
         sql_drop = """
           DROP TABLE planet_osm_notes IF EXISTS;
           DROP TABLE planet_osm_notes_comments IF EXISTS;
