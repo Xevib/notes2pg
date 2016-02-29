@@ -24,6 +24,15 @@ def load(filename, user=None, database=None, password=None, host=None,create=Fal
     root = tree.getroot()
     cur = con.cursor()
     projection = str(4326)
+    if create:
+        with open('schema.sql', 'r') as f:
+            sql_create = f.read()
+        sql_drop = """
+          DROP TABLE planet_osm_notes IF EXISTS;
+          DROP TABLE planet_osm_notes_comments IF EXISTS;
+        """
+        cur.execute(sql_drop)
+        cur.execute(sql_create)
     sql_insert_note = """
         INSERT INTO planet_osm_notes VALUES (%(id)s,
         ST_SETSRID(ST_MAKEPOINT(%(lat)s,%(lon)s),%(projection)s),%(created_at)s,%(closed_at)s)
@@ -57,6 +66,7 @@ def help():
     print('\t-d Postgres database')
     print('\t-w Postgres password')
     print('\t-H Postgres host')
+    print('\t-c create the table schema')
 
 
 def main():
@@ -81,6 +91,9 @@ def main():
                 x += 1
             elif arg == '-H':
                 host = sys.argv[x+1]
+                x += 1
+            elif arg == '-a':
+                append = sys.argv[x+1]
                 x += 1
             elif arg == '--help':
                 help()
