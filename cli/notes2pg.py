@@ -6,26 +6,11 @@ import datetime
 
 
 def create_schema(con):
-    print('Creating schema')
-    f = open('schema.sql', 'r')
-    query = f.read()
-    f.close()
-    cursor = con.cursor()
-    cursor.execute(query)
-    cursor.close()
-
-
-def load(filename, user=None, database=None, password=None, host=None,create=False):
-    con = psycopg2.connect(database=database, user=user, password=password, host=host)
-    if create:
-        create_schema(con)
-    print('Loading file')
-    tree = etree.parse(filename)
-    root = tree.getroot()
-    cur = con.cursor()
-    projection = str(4326)
-    if create:
-        sql_create = """
+    sql_drop = """
+          DROP TABLE planet_osm_notes IF EXISTS;
+          DROP TABLE planet_osm_notes_comments IF EXISTS;
+        """
+    query = """
         CREATE TABLE planet_osm_notes(
         id integer NOT NULL PRIMARY KEY,
         geom geometry NOT NULL,
@@ -41,12 +26,21 @@ def load(filename, user=None, database=None, password=None, host=None,create=Fal
 	    comment text
         );
         """
-        sql_drop = """
-          DROP TABLE planet_osm_notes IF EXISTS;
-          DROP TABLE planet_osm_notes_comments IF EXISTS;
-        """
-        cur.execute(sql_drop)
-        cur.execute(sql_create)
+    cursor = con.cursor()
+    cursor.execute(sql_drop)
+    cursor.execute(query)
+    cursor.close()
+
+
+def load(filename, user=None, database=None, password=None, host=None,create=False):
+    con = psycopg2.connect(database=database, user=user, password=password, host=host)
+    if create:
+        create_schema(con)
+    print('Loading file')
+    tree = etree.parse(filename)
+    root = tree.getroot()
+    cur = con.cursor()
+    projection = str(4326)
     sql_insert_note = """
         INSERT INTO planet_osm_notes VALUES (%(id)s,
         ST_SETSRID(ST_MAKEPOINT(%(lat)s,%(lon)s),%(projection)s),%(created_at)s,%(closed_at)s)
