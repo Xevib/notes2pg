@@ -7,8 +7,8 @@ import datetime
 
 def create_schema(con):
     sql_drop = """
-          DROP TABLE planet_osm_notes IF EXISTS;
-          DROP TABLE planet_osm_notes_comments IF EXISTS;
+          DROP TABLE IF EXISTS planet_osm_notes;
+          DROP TABLE IF EXISTS planet_osm_notes_comments;
         """
     query = """
         CREATE TABLE planet_osm_notes(
