@@ -43,7 +43,7 @@ def load(filename, user=None, database=None, password=None, host=None,create=Fal
     projection = str(4326)
     sql_insert_note = """
         INSERT INTO planet_osm_notes VALUES (%(id)s,
-        ST_SETSRID(ST_MAKEPOINT(%(lat)s,%(lon)s),%(projection)s),%(created_at)s,%(closed_at)s)
+        ST_SETSRID(ST_MAKEPOINT(%(lon)s,%(lat)s),%(projection)s),%(created_at)s,%(closed_at)s)
     """
     sql_insert_comment = """
         INSERT INTO planet_osm_notes_comments VALUES(%(note_id)s,%(action)s,%(timestamp)s,%(uid)s,%(user)s,%(comment)s)
